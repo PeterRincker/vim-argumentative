@@ -1,0 +1,53 @@
+*argumentative.txt*   Function argument motions and manipulation
+
+Author:  Peter Rincker                                    *argumentative-author*
+License: Same terms as Vim itself (see |license|)
+
+This plugin is only available if 'compatible' is not set.
+
+==============================================================================
+                                                               *argumentative*
+Argumentative aids with manipulating and moving between function arguments.
+Shifting arguments with |<,| and |>,| and moving with |[,| and |],|.
+
+1. Argument motions		|argumentative-motions|
+2. Shifting arguments 		|argumentative-shifting|
+3. Argument text objects	|argumentative-text-objects|
+
+==============================================================================
+1. Argument motions                             *argumentative-motions*
+
+						*[,*
+[,			go to [count] previous argument boundary
+
+						*],*
+],			go to [count] next argument boundary
+
+==============================================================================
+2. Shifting arguments 				*argumentative-shifting*
+
+						*<,*
+<,			Shift current argument [count] arguments left
+
+						*>,*
+>,			Shift current argument [count] arguments right
+
+==============================================================================
+3. Argument text objects 			*argumentative-text-objects*
+
+						*a,*
+a,			"an argument" text object
+
+						*i,*
+i,			"an argument" text object
+
+
+==============================================================================
+SPECIAL THANKS                                  *argumentative-special-thanks*
+
+Kana Natsuno who created textobj-user which this plugin will optionally use.
+
+Tim Pope who has created many amazing plugins, but especially repeat.vim which
+this optionally plugin uses.
+
+ vim:tw=78:ts=8:ft=help:norl:
