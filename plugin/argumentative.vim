@@ -11,6 +11,10 @@ let s:pairs[')'] = '('
 let s:pairs['}'] = '{'
 let s:pairs[']'] = '['
 
+" ArgMotion
+" Move to the next boundry. Takes nesting into account.
+" a:direction: int
+"   0 for backward, otherwise forwards
 function! s:ArgMotion(direction)
   let direction = a:direction ? '' : 'b'
   let s:stack = []
