@@ -45,8 +45,6 @@ i,			"an argument" text object
 ==============================================================================
 SPECIAL THANKS                                  *argumentative-special-thanks*
 
-Kana Natsuno who created textobj-user which this plugin will optionally use.
-
 Tim Pope who has created many amazing plugins, but especially repeat.vim which
 this optionally plugin uses.
 

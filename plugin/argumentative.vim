@@ -206,10 +206,6 @@ function! s:VisualTextObject(fn)
   endtry
 endfunction
 
-map <SID>xx <SID>xx
-let s:sid = substitute(maparg("<SID>xx"),'xx$','', '')
-unmap <SID>xx
-
 noremap <script> <silent> <Plug>Argumentative_Prev :<c-u>call <SID>Count("", "\<SID>ArgMotion", 0)<cr>
 noremap <script> <silent> <Plug>Argumentative_Next :<c-u>call <SID>Count("", "\<SID>ArgMotion", 1)<cr>
 noremap <script> <silent> <Plug>Argumentative_OPrev :<c-u>call <SID>Count("", "\<SID>ArgMotion", 0)<cr>
@@ -227,25 +223,8 @@ call s:PlugMap('o', '],', 'Next')
 call s:PlugMap('n', '<,', 'MoveLeft')
 call s:PlugMap('n', '>,', 'MoveRight')
 
-" try my own txtobj plugin
-silent! call txtobj#map('a,', s:sid . "OuterTextObject")
-silent! call txtobj#map('i,', s:sid . "InnerTextObject")
-
-" try Kana's textobj-user plugin
-if maparg('a,', 'v') == ''
-  silent! call textobj#user#plugin('argumentative', {
-        \      '-': {
-        \        '*sfile*': expand('<sfile>:p'),
-        \        'select-a': "a,",  '*select-a-argument*': 's:OuterTextObject',
-        \        'select-i': "i,",  '*select-i-argument*': 's:InnerTextObject'
-        \      }
-        \    })
-endif
-
 " Simple text object mappings
-if maparg('a,', 'v') == ''
-  xmap i, <Plug>Argumentative_InnerTextObject
-  xmap a, <Plug>Argumentative_OuterTextObject
-  omap i, :normal vi,<cr>
-  omap a, :normal va,<cr>
-endif
+xmap i, <Plug>Argumentative_InnerTextObject
+xmap a, <Plug>Argumentative_OuterTextObject
+omap i, :normal vi,<cr>
+omap a, :normal va,<cr>
