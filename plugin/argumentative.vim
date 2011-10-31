@@ -51,15 +51,13 @@ endfunction
 
 function! s:MoveLeft()
   call s:Move(0)
+  call s:ArgMotion(1)
 endfunction
 
 function! s:MoveRight()
   call s:Move(1)
-  let o = s:OuterTextObject()
-  call setpos('.', o[2])
-  call search('.', 'W')
-  let a = s:InnerTextObject()
-  call setpos('.', a[1])
+  call s:ArgMotion(1)
+  call s:ArgMotion(1)
 endfunction
 
 function! s:Move(direction)
@@ -70,12 +68,11 @@ function! s:Move(direction)
   if a:direction
     call setpos('.', outer[2])
     call s:ArgMotion(a:direction)
-    if !s:is_open(s:getchar(), a:direction)
-      call search('.', 'bW')
-    endif
   else
     call setpos('.', outer[1])
-    call s:ArgMotion(a:direction)
+    if s:getchar() != ','
+      call s:ArgMotion(a:direction)
+    endif
   endif
   let b = s:InnerTextObject()
   call s:exchange(a, b)
@@ -129,7 +126,7 @@ function! s:exchange(a, b)
     endif
     call setpos("'[", ms)
     call setpos("']", me)
-    norm! `[
+    norm! `]
     call setreg('a', rv, rt)
   endtry
 endfunction
@@ -146,64 +143,42 @@ function! s:cmp(a, b)
 endfunction
 
 function! s:OuterTextObject()
-  let c = s:getchar()
-  if !s:is_open(c, 1) && c != ','
+  if s:is_open(s:getchar(), 1)
     call s:ArgMotion(1)
-    let save = getpos('.')
-    if s:getchar() =~ '[])}]'
-      call search('.', 'bW')
-    endif
+    let ce = s:getchar()
     let end = getpos('.')
-    call setpos('.', save)
     call s:ArgMotion(0)
-    if s:getchar() =~ '[({,[]'
-      call search('.', 'W')
-    endif
+    let cs = s:getchar()
     let start = getpos('.')
   else
     call s:ArgMotion(0)
-    if s:getchar() =~ '[({,[]'
-      call search('.', 'W')
-    endif
+    let cs = s:getchar()
     let start = getpos('.')
     call s:ArgMotion(1)
-    if s:getchar() =~ '[])}]'
-      call search('.', 'bW')
-    endif
+    let ce = s:getchar()
+    let end = getpos('.')
+  endif
+  if cs =~ '[{([]' || (cs == ',' && ce !~ '[])}]')
+    call setpos('.', start)
+    call search('.', 'W')
+    let start = getpos('.')
+  endif
+  if ce =~ '[])}]'
+    call setpos('.', end)
+    call search('.', 'bW')
     let end = getpos('.')
   endif
   return ['v', start, end]
 endfunction
 
-function! s:InnerTextObject(...)
-  let c = s:getchar()
-  if !s:is_open(c, 1) && c != ','
-    call s:ArgMotion(1)
-    let outer_end = getpos('.')
-    if s:getchar() !~ '\w'
-      call search('\S', 'b')
-    endif
-    let end = getpos('.')
-    call setpos('.', outer_end)
-    call s:ArgMotion(0)
-    if s:getchar() !~ '\w'
-      call search('\S')
-    endif
-    let start = getpos('.')
-  else
-    call s:ArgMotion(0)
-    let outer_start = getpos('.')
-    if s:getchar() !~ '\w'
-      call search('\S')
-    endif
-    let start = getpos('.')
-    call setpos('.', outer_start)
-    call s:ArgMotion(1)
-    if s:getchar() !~ '\w'
-      call search('\S', 'b')
-    endif
-    let end = getpos('.')
-  endif
+function! s:InnerTextObject()
+  let outer = s:OuterTextObject()
+  call setpos('.', outer[1])
+  call search('\S', 'W' . (s:getchar() != ',' ? 'c' : ''))
+  let start = getpos('.')
+  call setpos('.', outer[2])
+  call search('\S', 'bW' . (s:getchar() != ',' ? 'c' : ''))
+  let end = getpos('.')
   return ['v', start, end]
 endfunction
 
