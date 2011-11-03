@@ -18,18 +18,39 @@ let s:pairs[']'] = '['
 function! s:ArgMotion(direction)
   let direction = a:direction ? '' : 'b'
   let s:stack = []
-  call searchpair('[({[]', ',', '[]})]', direction . 'W', "s:skip(" . a:direction . ")")
+  if s:is_implicit_function_call()
+    let [l, start] = searchpos('\m\k[?!]\=\s\+\%("\|-\d\|\k\|[({([]]\)', 'nb', line('.'))
+    if &ft =~ '\m\<\%(ruby\|eruby\)\>'
+      let [l, end] = searchpos('\m\%(\S\s\+\<do\>\|%>\|$\)', 'n', line('.'))
+    elseif &ft =~ '\<coffee\>' && match(getline(line('.')), '\m\S\s\+->$') > -1
+      let [l, end] = searchpos('\m\S\zs\s\+->$', 'n', line('.'))
+    else
+      let end = col('$') - 1
+      let c = getline(line('.'))[-1:]
+      if s:is_open(c, 0) && col('.') == end
+        let s:stack = [c]
+      endif
+    endif
+    call searchpair('\%(\%' . (start+1) . 'c\|[({[]\)', ',', '\%(\%' . end . 'c\|[]})]\)', direction . 'W', "s:skip(" . a:direction . ", " . (start+1) . ", " . end . ")", line('.'))
+  else
+    call searchpair('[({[]', ',', '[]})]', direction . 'W', "s:skip(" . a:direction . ")")
+  endif
 endfunction
 
-function! s:skip(direction)
+function! s:skip(direction, ...)
+  if a:0 && ((col('.') == a:2) || (col('.') == a:1))
+    return 0
+  endif
   let syn = synIDattr(synID(line("."), col("."), 0), "name")
   if syn =~? "string" || syn =~? "comment" || syn =~? "regex" || syn =~? "perlmatch" || syn =~? "perlsubstitution"
     return 1
   endif
   let c = s:getchar()
   let top = len(s:stack) > 0 ? s:stack[0] : ''
-  if top == '' && !s:is_open(c, a:direction)
+  if top == '' && !s:is_open(c, a:direction) && (!a:0 || c =~ ',')
     return 0
+  elseif a:0 && c !~ '[](),{}[]' && a:2 == col('.')
+    return 1
   elseif c =~ '[](){}[]'
     if top == s:get_pair(c)
       call remove(s:stack, 0)
@@ -39,6 +60,10 @@ function! s:skip(direction)
     endif
   endif
   return len(s:stack) > 0
+endfunction
+
+function! s:is_implicit_function_call()
+  return &ft =~ '\m\<\%(ruby\|eruby\|coffee\)\>' && getline(line('.')) =~ '\m\k[?!]\=\s\+\%("\|-\d\|\k\|[({[]]\)'
 endfunction
 
 function! s:get_pair(c)
@@ -91,6 +116,8 @@ function! s:exchange(a, b)
   let vm = visualmode()
   let vs = getpos("'<")
   let ve = getpos("'>")
+  let virtualedit = &virtualedit
+  let &virtualedit = 'onemore'
   try
     if s:cmp(a:a[1], a:b[1]) < 0
       let x = a:a
@@ -146,6 +173,7 @@ function! s:exchange(a, b)
     call setpos("']", me)
     norm! `]
     call setreg('a', rv, rt)
+    let &virtualedit = virtualedit
   endtry
 endfunction
 
@@ -181,7 +209,7 @@ function! s:OuterTextObject()
     call search('.', 'W')
     let start = getpos('.')
   endif
-  if ce =~ '[])}]'
+  if ce =~ '[])}]' && !(s:is_implicit_function_call() && end[2] == col('$')-1)
     call setpos('.', end)
     call search('.', 'bW')
     let end = getpos('.')
