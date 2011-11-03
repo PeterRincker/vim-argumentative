@@ -215,6 +215,8 @@ noremap <script> <silent> <Plug>Argumentative_MoveRight :<c-u>call <SID>Count("M
 
 noremap <script> <silent> <Plug>Argumentative_InnerTextObject :<c-u>call <SID>VisualTextObject("\<SID>InnerTextObject")<cr>
 noremap <script> <silent> <Plug>Argumentative_OuterTextObject :<c-u>call <SID>VisualTextObject("\<SID>OuterTextObject")<cr>
+noremap <script> <silent> <Plug>Argumentative_OpPendingInnerTextObject :exe "normal v\<Plug>Argumentative_InnerTextObject"<cr>
+noremap <script> <silent> <Plug>Argumentative_OpPendingOuterTextObject :exe "normal v\<Plug>Argumentative_OuterTextObject"<cr>
 
 call s:PlugMap('n', '[,', 'Prev')
 call s:PlugMap('n', '],', 'Next')
@@ -224,7 +226,7 @@ call s:PlugMap('n', '<,', 'MoveLeft')
 call s:PlugMap('n', '>,', 'MoveRight')
 
 " Simple text object mappings
-xmap i, <Plug>Argumentative_InnerTextObject
-xmap a, <Plug>Argumentative_OuterTextObject
-omap i, :normal vi,<cr>
-omap a, :normal va,<cr>
+call s:PlugMap('x', 'i,', 'InnerTextObject')
+call s:PlugMap('x', 'a,', 'OuterTextObject')
+call s:PlugMap('o', 'i,', 'OpPendingInnerTextObject')
+call s:PlugMap('o', 'a,', 'OpPendingOuterTextObject')
