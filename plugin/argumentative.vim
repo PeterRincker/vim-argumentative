@@ -51,13 +51,10 @@ endfunction
 
 function! s:MoveLeft()
   call s:Move(0)
-  call s:ArgMotion(1)
 endfunction
 
 function! s:MoveRight()
   call s:Move(1)
-  call s:ArgMotion(1)
-  call s:ArgMotion(1)
 endfunction
 
 function! s:Move(direction)
@@ -76,6 +73,7 @@ function! s:Move(direction)
   endif
   let b = s:InnerTextObject()
   call s:exchange(a, b)
+  call s:ArgMotion(1)
 endfunction
 
 function! s:Count(mapping, fn, ...)
@@ -97,9 +95,11 @@ function! s:exchange(a, b)
     if s:cmp(a:a[1], a:b[1]) < 0
       let x = a:a
       let y = a:b
+      let adjust = 1
     else
       let x = a:b
       let y = a:a
+      let adjust = 0
     endif
     call setpos("'[", x[1])
     call setpos("']", x[2])
@@ -111,11 +111,29 @@ function! s:exchange(a, b)
     let second = @a
     let @a = first
     norm! "aP
+    let adj_bottom = [getpos("'["), getpos("']")]
     call setpos("'[", x[1])
     call setpos("']", x[2])
     norm! `[v`]"_d
     let @a = second
     norm! "aP
+    let adj_top = [getpos("'["), getpos("']")]
+    if adjust
+      let l_delta = 0
+      let c_delta1 = 0
+      let c_delta2 = 0
+      if x[2][1] == adj_bottom[0][1]
+        let c_delta1 = adj_top[1][2] - x[2][2]
+        if x[1][1] == x[2][1]
+          let c_delta2 = c_delta1
+        endif
+      endif
+      if adj_top[1][1] != x[2][1]
+        let l_delta = adj_top[1][1] - x[2][1]
+      endif
+      call setpos("'[", [adj_bottom[0][0], adj_bottom[0][1] + l_delta, adj_bottom[0][2] + c_delta1, adj_bottom[0][3]])
+      call setpos("']", [adj_bottom[1][0], adj_bottom[1][1] + l_delta, adj_bottom[1][2] + c_delta2, adj_bottom[1][3]])
+    endif
   finally
     let ms = getpos("'[")
     let me = getpos("']")
