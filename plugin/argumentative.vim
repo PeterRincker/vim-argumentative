@@ -254,8 +254,8 @@ endfunction
 
 noremap <script> <silent> <Plug>Argumentative_Prev :<c-u>call <SID>Count("", "\<SID>ArgMotion", 0)<cr>
 noremap <script> <silent> <Plug>Argumentative_Next :<c-u>call <SID>Count("", "\<SID>ArgMotion", 1)<cr>
-noremap <script> <silent> <Plug>Argumentative_OPrev :<c-u>call <SID>Count("", "\<SID>ArgMotion", 0)<cr>
-noremap <script> <silent> <Plug>Argumentative_ONext :<c-u>call <SID>Count("", "\<SID>ArgMotion", 1)<cr>
+noremap <script> <silent> <Plug>Argumentative_XPrev :<c-u>call <SID>Count("", "\<SID>ArgMotion", 0)<cr>m'gv``
+noremap <script> <silent> <Plug>Argumentative_XNext :<c-u>call <SID>Count("", "\<SID>ArgMotion", 1)<cr>m'gv``
 noremap <script> <silent> <Plug>Argumentative_MoveLeft :<c-u>call  <SID>Count("MoveLeft", "\<SID>MoveLeft")<cr>
 noremap <script> <silent> <Plug>Argumentative_MoveRight :<c-u>call <SID>Count("MoveRight", "\<SID>MoveRight")<cr>
 
@@ -268,6 +268,8 @@ call s:PlugMap('n', '[,', 'Prev')
 call s:PlugMap('n', '],', 'Next')
 call s:PlugMap('o', '[,', 'Prev')
 call s:PlugMap('o', '],', 'Next')
+call s:PlugMap('x', '[,', 'XPrev')
+call s:PlugMap('x', '],', 'XNext')
 call s:PlugMap('n', '<,', 'MoveLeft')
 call s:PlugMap('n', '>,', 'MoveRight')
 
