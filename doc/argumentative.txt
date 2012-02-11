@@ -39,7 +39,7 @@ Shifting arguments with |<,| and |>,| and moving with |[,| and |],|.
 a,			"an argument" text object
 
 						*i,*
-i,			"an argument" text object
+i,			"inner argument" text object
 
 
 ==============================================================================
