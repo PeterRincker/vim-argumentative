@@ -46,6 +46,6 @@ i,			"inner argument" text object
 SPECIAL THANKS                                  *argumentative-special-thanks*
 
 Tim Pope who has created many amazing plugins, but especially repeat.vim which
-this optionally plugin uses.
+this plugin optionally uses.
 
  vim:tw=78:ts=8:ft=help:norl:
