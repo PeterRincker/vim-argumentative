@@ -26,7 +26,7 @@ mappings in your `~/.vimrc` file to argumentative's `<Plug>` mappings.
 
     nmap [; <Plug>Argumentative_Prev
     nmap ]; <Plug>Argumentative_Next
-    xmap ]; <Plug>Argumentative_XPrev
+    xmap [; <Plug>Argumentative_XPrev
     xmap ]; <Plug>Argumentative_XNext
     nmap <; <Plug>Argumentative_MoveLeft
     nmap >; <Plug>Argumentative_MoveRight
