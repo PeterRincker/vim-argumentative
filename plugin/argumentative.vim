@@ -241,8 +241,29 @@ endfunction
 function! s:VisualTextObject(fn)
   let ms = getpos("'[")
   let me = getpos("']")
+  let vs = getpos("'<")
+  let ve = getpos("'>")
+
+  call setpos(".", vs)
+
   try
     let obj = call(a:fn, [])
+
+    if s:needs_to_expand(vs, ve, obj, a:fn)
+      call setpos(".", ve)
+      call s:ArgMotion(1)
+      let c = s:getchar()
+      while c !~ '[])}]'
+        call s:ArgMotion(1)
+        let c = s:getchar()
+      endwhile
+      normal! l
+      let possible = call(a:fn, [])
+      if s:contained(possible, obj)
+        let obj = possible
+      endif
+    endif
+
     call setpos("'[", obj[1])
     call setpos("']", obj[2])
     exe 'norm! `[' . obj[0] . '`]'
@@ -250,6 +271,35 @@ function! s:VisualTextObject(fn)
     call setpos("'[", ms)
     call setpos("']", me)
   endtry
+endfunction
+
+function! s:needs_to_expand(vs, ve, obj, fn)
+  " single character selections are not expanable
+  if s:cmp(a:vs, a:ve) == 0
+    return 0
+  endif
+
+  " object w/ same boundries as selction should expand
+  if s:cmp(a:vs, a:obj[1]) == 0 && s:cmp(a:ve, a:obj[2]) == 0
+    return 1
+  endif
+
+  " move cursor to opposite end of selection and repeat text object
+  call setpos(".", a:ve)
+  let obj = call(a:fn, [])
+  call setpos(".", a:vs)
+
+  " objects at different locations should expand
+  if s:cmp(obj[1], a:obj[1]) != 0 || s:cmp(obj[2], a:obj[2]) != 0
+    return 1
+  endif
+
+  return 0
+endfunction
+
+" region a contains region b
+function! s:contained(a, b)
+  return s:cmp(a:a[1], a:b[1]) <= 0 && s:cmp(a:b[2], a:a[2]) <= 0
 endfunction
 
 noremap <script> <silent> <Plug>Argumentative_Prev :<c-u>call <SID>Count("", "\<SID>ArgMotion", 0)<cr>
