@@ -264,17 +264,19 @@ noremap <script> <silent> <Plug>Argumentative_OuterTextObject :<c-u>call <SID>Vi
 noremap <script> <silent> <Plug>Argumentative_OpPendingInnerTextObject :exe "normal v\<Plug>Argumentative_InnerTextObject"<cr>
 noremap <script> <silent> <Plug>Argumentative_OpPendingOuterTextObject :exe "normal v\<Plug>Argumentative_OuterTextObject"<cr>
 
-call s:PlugMap('n', '[,', 'Prev')
-call s:PlugMap('n', '],', 'Next')
-call s:PlugMap('o', '[,', 'Prev')
-call s:PlugMap('o', '],', 'Next')
-call s:PlugMap('x', '[,', 'XPrev')
-call s:PlugMap('x', '],', 'XNext')
-call s:PlugMap('n', '<,', 'MoveLeft')
-call s:PlugMap('n', '>,', 'MoveRight')
+if !exists("g:argumentative_no_mappings") || ! g:argumentative_no_mappings
+  call s:PlugMap('n', '[,', 'Prev')
+  call s:PlugMap('n', '],', 'Next')
+  call s:PlugMap('o', '[,', 'Prev')
+  call s:PlugMap('o', '],', 'Next')
+  call s:PlugMap('x', '[,', 'XPrev')
+  call s:PlugMap('x', '],', 'XNext')
+  call s:PlugMap('n', '<,', 'MoveLeft')
+  call s:PlugMap('n', '>,', 'MoveRight')
 
-" Simple text object mappings
-call s:PlugMap('x', 'i,', 'InnerTextObject')
-call s:PlugMap('x', 'a,', 'OuterTextObject')
-call s:PlugMap('o', 'i,', 'OpPendingInnerTextObject')
-call s:PlugMap('o', 'a,', 'OpPendingOuterTextObject')
+  " Simple text object mappings
+  call s:PlugMap('x', 'i,', 'InnerTextObject')
+  call s:PlugMap('x', 'a,', 'OuterTextObject')
+  call s:PlugMap('o', 'i,', 'OpPendingInnerTextObject')
+  call s:PlugMap('o', 'a,', 'OpPendingOuterTextObject')
+endif
