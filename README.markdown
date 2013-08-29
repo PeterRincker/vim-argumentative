@@ -2,7 +2,7 @@
 
 Argumentative aids with manipulating and moving between function arguments.
 
-* Shifting arguments with `<`, and `>,`
+* Shifting arguments with `<,` and `>,`
 * Moving between argument boundaries with `[,` and `],`
 * New text objects `a,` and `i,`
 
