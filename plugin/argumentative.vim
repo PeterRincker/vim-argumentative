@@ -83,6 +83,8 @@ function! s:MoveRight()
 endfunction
 
 function! s:Move(direction)
+  let selection = &selection
+  let &selection = "inclusive"
   let pos = getpos('.')
   let outer = s:OuterTextObject()
   call setpos('.', pos)
@@ -99,6 +101,7 @@ function! s:Move(direction)
   let b = s:InnerTextObject()
   call s:exchange(a, b)
   call s:ArgMotion(1)
+  let &selection = selection
 endfunction
 
 function! s:Count(mapping, fn, ...)
@@ -267,6 +270,12 @@ function! s:VisualTextObject(fn)
     call setpos("'[", obj[1])
     call setpos("']", obj[2])
     exe 'norm! `[' . obj[0] . '`]'
+    if &selection ==# 'exclusive'
+      let virtualedit = &virtualedit
+      let &virtualedit = "all"
+      exe "norm! \<esc>gvl"
+      let &virtualedit = virtualedit
+    endif
   finally
     call setpos("'[", ms)
     call setpos("']", me)
