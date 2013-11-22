@@ -63,7 +63,7 @@ function! s:skip(direction, ...)
 endfunction
 
 function! s:is_implicit_function_call()
-  return &ft =~ '\m\<\%(ruby\|eruby\|coffee\)\>' && getline(line('.')) =~ '\m\k[?!]\=\s\+\%("\|-\d\|\k\|[({[]]\)'
+  return &ft =~ '\m\<\%(ruby\|eruby\|coffee\)\>' && getline(line('.')) =~ '\m\k[?!]\=\s\+\%("\|-\d\|\k\+\>[?!]\=\s*\%((\)\@!\|[({[]]\)'
 endfunction
 
 function! s:get_pair(c)
