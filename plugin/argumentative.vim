@@ -105,11 +105,12 @@ function! s:Move(direction)
 endfunction
 
 function! s:Count(mapping, fn, ...)
+  let operator = v:operator
   for i in range(v:count1)
     call call(a:fn, a:000)
   endfor
   if a:mapping != ''
-    sil! call repeat#set("\<Plug>Argumentative_" . a:mapping, v:count1)
+    sil! call repeat#set("\<Plug>Argumentative_" . a:mapping . (operator == 'c' ? "\<c-r>." : ''), v:count1)
   endif
 endfunction
 
