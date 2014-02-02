@@ -210,12 +210,17 @@ function! s:OuterTextObject()
   endif
   if cs =~ '[{([]' || (cs == ',' && ce !~ '[])}]')
     call setpos('.', start)
-    call search('.', 'W')
+    call search('\_.', 'W')
     let start = getpos('.')
   endif
   if ce =~ '[])}]' && !(s:is_implicit_function_call() && end[2] == col('$')-1)
     call setpos('.', end)
     call search('.', 'bW')
+    let end = getpos('.')
+  endif
+  if cs =~ '[{([]' && ce =~ ','
+    call setpos('.', end)
+    call search(',\%(\_s\{-}\n\ze\s*\|\s\+\ze\)\S', 'ceW')
     let end = getpos('.')
   endif
   return ['v', start, end]
@@ -227,7 +232,7 @@ function! s:InnerTextObject()
   call search('\S', 'W' . (s:getchar() != ',' ? 'c' : ''))
   let start = getpos('.')
   call setpos('.', outer[2])
-  call search('\S', 'bW' . (s:getchar() != ',' ? 'c' : ''))
+  call search('\S\&[^,]', 'bW' . (s:getchar() != ',' ? 'c' : ''))
   let end = getpos('.')
   return ['v', start, end]
 endfunction
