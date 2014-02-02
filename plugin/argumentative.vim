@@ -254,6 +254,9 @@ function! s:VisualTextObject(fn)
   let ve = getpos("'>")
 
   call setpos(".", vs)
+  if s:getchar() == ','
+    call search('.', 'W')
+  endif
 
   try
     let obj = call(a:fn, [])
