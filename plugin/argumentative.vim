@@ -242,8 +242,9 @@ function! s:getchar(...)
 endfunction
 
 function! s:PlugMap(mode, lhs, rhs)
-  if !hasmapto(a:lhs, a:mode)
-    exe a:mode . 'map ' . a:lhs . ' <Plug>Argumentative_' . a:rhs
+  let plugmap = ' <Plug>Argumentative_' . a:rhs
+  if !hasmapto(plugmap, a:mode)
+    exe a:mode . 'map ' . a:lhs . plugmap
   endif
 endfunction
 
