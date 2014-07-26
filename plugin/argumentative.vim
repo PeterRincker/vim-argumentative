@@ -328,8 +328,8 @@ noremap <script> <silent> <Plug>Argumentative_XNext :<c-u>call <SID>Count("", "\
 noremap <script> <silent> <Plug>Argumentative_MoveLeft :<c-u>call  <SID>Count("MoveLeft", "\<SID>MoveLeft")<cr>
 noremap <script> <silent> <Plug>Argumentative_MoveRight :<c-u>call <SID>Count("MoveRight", "\<SID>MoveRight")<cr>
 
-noremap <SID>Argumentative_InnerTextObject :<c-u>call <SID>VisualTextObject("\<SID>InnerTextObject")<cr>
-noremap <SID>Argumentative_OuterTextObject :<c-u>call <SID>VisualTextObject("\<SID>OuterTextObject")<cr>
+noremap <silent> <SID>Argumentative_InnerTextObject :<c-u>call <SID>VisualTextObject("\<SID>InnerTextObject")<cr>
+noremap <silent> <SID>Argumentative_OuterTextObject :<c-u>call <SID>VisualTextObject("\<SID>OuterTextObject")<cr>
 
 noremap <script> <silent> <Plug>Argumentative_InnerTextObject :<c-u>call <SID>VisualTextObject("\<SID>InnerTextObject")<cr>
 noremap <script> <silent> <Plug>Argumentative_OuterTextObject :<c-u>call <SID>VisualTextObject("\<SID>OuterTextObject")<cr>
